@@ -91,7 +91,7 @@ describe('AuthService', () => {
 
 	describe('loginUser', () => {
 		it('should login user successfully', async () => {
-			const dto = { email: 'test@example.com', password: '123456' };
+			const dto = { userName: 'test', password: '123456' };
 			const mockUser = {
 				id: 'uuid',
 				userName: 'test',
@@ -122,7 +122,7 @@ describe('AuthService', () => {
 			(User.findOne as jest.Mock).mockResolvedValue(null);
 
 			const [error] = await authService.loginUser({
-				email: 'bad@example.com',
+				userName: 'bad',
 				password: 'wrong',
 			});
 
@@ -141,7 +141,7 @@ describe('AuthService', () => {
 			(BcryptAdapter.compare as jest.Mock).mockResolvedValue(false);
 
 			const [error] = await authService.loginUser({
-				email: 'test@example.com',
+				userName: 'test',
 				password: 'bad',
 			});
 

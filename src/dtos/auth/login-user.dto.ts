@@ -1,13 +1,12 @@
 import { Validators } from '@/config';
 
 export class LoginUserDto {
-	private constructor(public email: string, public password: string) {}
+	private constructor(public userName: string, public password: string) {}
 
 	static create(object: { [key: string]: any }): [string?, LoginUserDto?] {
-		const { email, password } = object;
-		if (!email) return ['Email is required'];
+		const { userName, password } = object;
+		if (!userName) return ['User Name is required'];
 		if (!password) return ['Password is required'];
-		if (!Validators.email.test(email)) return ['Email is invalid'];
-		return [undefined, new LoginUserDto(email, password)];
+		return [undefined, new LoginUserDto(userName, password)];
 	}
 }

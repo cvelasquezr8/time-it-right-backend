@@ -28,7 +28,7 @@ export class AuthService {
 
 	async registerUser(
 		registerUserDto: RegisterUserDto,
-	): Promise<[string?, UserMapper?]> {
+	): Promise<[string?, LoginResponse?]> {
 		try {
 			const { userName, email, password } = registerUserDto;
 			const userFound = await this.findUserByEmailOrUserName(email);
@@ -44,8 +44,17 @@ export class AuthService {
 				password: hashedPassword,
 			});
 
+			const token = await this.signToken({ id: user.id });
+			const userResponse = UserMapper.fromObject(user);
+
 			logger.info(`User registered successfully: ${user.email}`);
-			return [undefined, UserMapper.fromObject(user)];
+			return [
+				undefined,
+				{
+					...userResponse,
+					token: token || '',
+				},
+			];
 		} catch (error) {
 			const errorMessage =
 				error instanceof CustomError
@@ -61,8 +70,8 @@ export class AuthService {
 		loginUserDto: LoginUserDto,
 	): Promise<[string?, LoginResponse?]> {
 		try {
-			const { email, password } = loginUserDto;
-			const userFound = await this.findUserByEmailOrUserName(email);
+			const { userName, password } = loginUserDto;
+			const userFound = await this.findUserByEmailOrUserName(userName);
 			if (!userFound) throw CustomError.badRequest('Invalid credentials');
 
 			const isPasswordValid = await this.comparePassword(
@@ -73,7 +82,7 @@ export class AuthService {
 			if (!isPasswordValid)
 				throw CustomError.badRequest('Invalid credentials');
 
-			const token = await this.signToken({ id: userFound.id }, '2h');
+			const token = await this.signToken({ id: userFound.id });
 			const userResponse = UserMapper.fromObject(userFound);
 
 			logger.info(`User logged in successfully: ${userFound.email}`);
