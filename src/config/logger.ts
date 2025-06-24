@@ -1,5 +1,5 @@
 import winston from 'winston';
-import chalk from 'chalk';
+const chalk = require('chalk');
 
 const baseLogger = winston.createLogger({
 	level: process.env.NODE_ENV === 'production' ? 'warn' : 'debug',
