@@ -45,7 +45,7 @@ export class GameController {
 			if (GeneralFunctions.isEmpty(gameId))
 				throw CustomError.badRequest('Game ID is required');
 
-			const [errorService] = await this.gameService.stopGame(
+			const [errorService, game] = await this.gameService.stopGame(
 				userId,
 				gameId,
 			);
@@ -54,6 +54,7 @@ export class GameController {
 
 			return res.status(200).json({
 				message: 'Game stopped successfully',
+				game,
 			});
 		} catch (error) {
 			const isCustom = error instanceof CustomError;

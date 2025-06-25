@@ -51,7 +51,7 @@ export class GameService {
 		}
 	}
 
-	async stopGame(userId: string, gameId: string): Promise<[string?]> {
+	async stopGame(userId: string, gameId: string): Promise<[string?, any?]> {
 		try {
 			const user = await this.getUserByID(userId);
 			if (!user)
@@ -86,10 +86,12 @@ export class GameService {
 			game.isSuccess = isSuccess;
 			await game.save();
 
+			const gameUpdated = await this.getGameSessionByID(gameId);
+
 			logger.info(
 				`Game session stopped successfully for user ${userId} with game ID ${gameId}`,
 			);
-			return [undefined];
+			return [undefined, gameUpdated];
 		} catch (error) {
 			const errorMessage =
 				error instanceof CustomError
