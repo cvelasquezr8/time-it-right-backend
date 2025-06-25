@@ -8,7 +8,7 @@
 	"license": "MIT",
 	"private": false,
 	"scripts": {
-		"start": "ts-node src/server.ts",
+		"start": "ts-node -r tsconfig-paths/register src/server.ts",
 		"dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
 		"test": "jest",
 		"test:coverage": "jest --coverage"
